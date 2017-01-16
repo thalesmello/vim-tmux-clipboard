@@ -9,7 +9,7 @@ function! s:TmuxBufferName()
 endfunction
 
 function! s:TmuxBuffer()
-	return system('tmux show-buffer')
+	return system('pbpaste')
 endfunction
 
 function! s:Enable()
@@ -26,9 +26,8 @@ function! s:Enable()
 		" @"
 		augroup vimtmuxclipboard
 			autocmd!
-			autocmd FocusLost * let s:lastbname=s:TmuxBufferName()
-			autocmd	FocusGained   * if s:lastbname!=s:TmuxBufferName() | let @" = s:TmuxBuffer() | endif
-			autocmd TextYankPost * silent! call system('tmux loadb -',join(v:event["regcontents"],"\n"))
+			autocmd	FocusGained   * let s:text = s:TmuxBuffer() | if @" != s:text | let @" = s:text | endif
+			autocmd TextYankPost * silent! call system('pbcopy',join(v:event["regcontents"],"\n"))
 		augroup END
 		let @" = s:TmuxBuffer()
 	else
