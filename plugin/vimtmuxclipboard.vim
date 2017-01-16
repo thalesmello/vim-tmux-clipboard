@@ -12,6 +12,11 @@ function! s:TmuxBuffer()
 	return system('pbpaste')
 endfunction
 
+function! s:SendCopy()
+	let job = jobstart(['pbcopy'])
+	call jobsend(job, join(v:event["regcontents"],"\n") . "\<c-d>")
+endfunction
+
 function! s:Enable()
 
 	if $TMUX=='' 
@@ -27,7 +32,7 @@ function! s:Enable()
 		augroup vimtmuxclipboard
 			autocmd!
 			autocmd	FocusGained   * let s:text = s:TmuxBuffer() | if @" != s:text | let @" = s:text | endif
-			autocmd TextYankPost * silent! call system('pbcopy',join(v:event["regcontents"],"\n"))
+			autocmd TextYankPost * silent! call s:SendCopy()
 		augroup END
 		let @" = s:TmuxBuffer()
 	else
