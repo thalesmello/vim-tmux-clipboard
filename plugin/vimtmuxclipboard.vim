@@ -14,7 +14,7 @@ endfunction
 
 function! s:SendCopy()
 	let job = jobstart(['pbcopy'])
-	call jobsend(job, join(v:event["regcontents"],"\n") . "\<c-d>")
+	call jobsend(job, join(v:event["regcontents"],"\n"))
 	call jobstop(job)
 endfunction
 
