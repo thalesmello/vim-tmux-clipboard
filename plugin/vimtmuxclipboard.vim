@@ -8,7 +8,7 @@ function! s:TmuxBufferName()
 	endif
 endfunction
 
-function! s:TmuxBuffer()
+function! s:SystemBuffer()
 	return system('pbpaste')
 endfunction
 
@@ -32,20 +32,20 @@ function! s:Enable()
 		" @"
 		augroup vimtmuxclipboard
 			autocmd!
-			autocmd	FocusGained   * let s:text = s:TmuxBuffer() | if @" != s:text | let @" = s:text | endif
+			autocmd	FocusGained   * let s:text = s:SystemBuffer() | if @" != s:text | let @" = s:text | endif
 			autocmd TextYankPost * silent! call s:SendCopy()
 		augroup END
-		let @" = s:TmuxBuffer()
 	else
 		" vim doesn't support TextYankPost event
 		" This is a workaround for vim
 		augroup vimtmuxclipboard
 			autocmd!
-			autocmd FocusLost     *  silent! call system('tmux loadb -',@")
-			autocmd	FocusGained   *  let @" = s:TmuxBuffer()
+			autocmd FocusLost     *  silent! call system('pbcopy', @")
+			autocmd	FocusGained   *  let @" = s:SystemBuffer()
 		augroup END
-		let @" = s:TmuxBuffer()
 	endif
+
+	let @" = s:SystemBuffer()
 
 endfunction
 
