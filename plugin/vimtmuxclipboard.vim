@@ -15,7 +15,7 @@ endfunction
 function! s:SendCopy()
 	let job = jobstart(['pbcopy'])
 	call jobsend(job, join(v:event["regcontents"],"\n"))
-	call jobstop(job)
+	call jobclose(job, 'stdin')
 endfunction
 
 function! s:Enable()
